@@ -1,6 +1,6 @@
 # eskit
 
-**在 WSL/Linux 里用自然语法搜索 Windows 文件。**
+**WSL-first Everything/es.exe friendly Windows file search CLI — Listary-like syntax, fuzzy + pinyin support, JSON output for AI agents.**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/deliuou/eskit/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9+-green.svg)](https://github.com/deliuou/eskit/tree/main/eskit-python)
