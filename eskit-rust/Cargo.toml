@@ -1,0 +1,26 @@
+[package]
+name = "eskit-rust"
+version = "1.0.0"
+edition = "2021"
+description = "WSL-first Everything/es.exe friendly Windows file search CLI written in Rust"
+license = "MIT"
+repository = "https://github.com/deliuou/eskit"
+readme = "README.md"
+keywords = ["everything", "es", "wsl", "search", "windows"]
+categories = ["command-line-utilities", "filesystem"]
+
+[[bin]]
+name = "eskit"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+csv = "1"
+chrono = { version = "0.4", features = ["serde"] }
+crossterm = "0.28"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
