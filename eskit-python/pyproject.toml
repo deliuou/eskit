@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "eskit-python"
 version = "1.0.0"
-description = "WSL-first Listary-like Windows file search powered by Everything es.exe."
+description = "WSL-first Everything/es.exe friendly Windows file search CLI — Listary-like syntax, fuzzy + pinyin support, JSON output for AI agents."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
