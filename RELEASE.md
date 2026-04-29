@@ -24,7 +24,9 @@
 ## Quick start
 
 ```bash
-pipx install eskit
+git clone https://github.com/deliuou/eskit.git
+cd eskit
+python3 -m pip install -e .
 export ESKIT_ES_PATH=/mnt/i/Software/Everything/es.exe
 eskit doctor
 eskit d .pdf ODL

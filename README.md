@@ -140,42 +140,18 @@ es.exe -n 5 "*.pdf"
 
 ## 安装：Linux / WSL
 
-这里的 Linux 主要指 WSL。推荐用 `pipx` 安装，让 `eskit` 拥有独立 Python 环境。
-
-### 方式一：pipx 安装，推荐
-
-```bash
-python3 -m pip install --user pipx
-python3 -m pipx ensurepath
-pipx install eskit
-```
-
-重新打开终端后检查：
-
-```bash
-eskit --version
-```
-
-如果 `eskit` 命令还找不到，确认 `~/.local/bin` 已经在 `PATH` 中。
-
-### 方式二：pip 用户级安装
-
-```bash
-python3 -m pip install --user eskit
-```
-
-升级：
-
-```bash
-python3 -m pip install --user --upgrade eskit
-```
-
-### 方式三：从源码开发安装
+这里的 Linux 主要指 WSL。当前推荐直接从 GitHub 源码安装：
 
 ```bash
 git clone https://github.com/deliuou/eskit.git
 cd eskit
 python3 -m pip install -e .
+```
+
+安装后检查：
+
+```bash
+eskit --version
 ```
 
 ### 设置 es.exe 路径
@@ -221,19 +197,7 @@ echo 'export ESKIT_ES_INSTANCE=1.5a' >> ~/.bashrc
 
 ## 卸载：Linux / WSL
 
-如果使用 `pipx` 安装：
-
-```bash
-pipx uninstall eskit
-```
-
-如果使用 `pip --user` 安装：
-
-```bash
-python3 -m pip uninstall eskit
-```
-
-如果是源码开发安装，也在源码目录或任意目录执行：
+在源码目录或任意目录执行：
 
 ```bash
 python3 -m pip uninstall eskit
@@ -248,54 +212,19 @@ export ESKIT_ES_INSTANCE=1.5a
 
 ## 安装：Windows
 
-Windows 原生命令行推荐在 PowerShell 中安装。
-
-### 方式一：pipx 安装，推荐
-
-先安装 `pipx`：
-
-```powershell
-py -m pip install --user pipx
-py -m pipx ensurepath
-```
-
-重新打开 PowerShell 后安装：
-
-```powershell
-pipx install eskit
-```
-
-检查：
-
-```powershell
-eskit --version
-eskit doctor
-```
-
-### 方式二：pip 用户级安装
-
-```powershell
-py -m pip install --user eskit
-```
-
-升级：
-
-```powershell
-py -m pip install --user --upgrade eskit
-```
-
-如果 `eskit` 命令找不到，请确认 Python Scripts 目录在 `PATH` 中，常见位置类似：
-
-```text
-C:\Users\<你的用户名>\AppData\Roaming\Python\Python312\Scripts
-```
-
-### 方式三：从源码开发安装
+Windows 原生命令行推荐在 PowerShell 中从 GitHub 源码安装：
 
 ```powershell
 git clone https://github.com/deliuou/eskit.git
 cd eskit
 py -m pip install -e .
+```
+
+安装后检查：
+
+```powershell
+eskit --version
+eskit doctor
 ```
 
 ### 设置 es.exe 路径
@@ -323,13 +252,7 @@ Everything 1.5 Alpha 用户：
 
 ## 卸载：Windows
 
-如果使用 `pipx` 安装：
-
-```powershell
-pipx uninstall eskit
-```
-
-如果使用 `pip --user` 或源码开发安装：
+在源码目录或任意目录执行：
 
 ```powershell
 py -m pip uninstall eskit
