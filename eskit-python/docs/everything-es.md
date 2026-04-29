@@ -1,6 +1,6 @@
 # Everything / es.exe 依赖说明
 
-`eskit-python` 本身不负责建立 Windows 文件索引。它调用 Windows 端的 Everything 和官方命令行工具 `es.exe`。
+`eskit` 本身不负责建立 Windows 文件索引。它调用 Windows 端的 Everything 和官方命令行工具 `es.exe`。
 
 ## 官方链接
 

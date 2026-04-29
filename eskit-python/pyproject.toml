@@ -3,7 +3,7 @@ requires = ["hatchling>=1.24"]
 build-backend = "hatchling.build"
 
 [project]
-name = "eskit-python"
+name = "eskit"
 version = "1.0.0"
 description = "WSL-first Everything/es.exe friendly Windows file search CLI — Listary-like syntax, fuzzy + pinyin support, JSON output for AI agents."
 readme = "README.md"

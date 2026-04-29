@@ -1,10 +1,10 @@
-# eskit-python v1.5.0
+# eskit v1.0.0
 
-`eskit-python` is a WSL-first Listary-like Windows file search tool powered by Everything / es.exe.
+`eskit` is a WSL-first Listary-like Windows file search tool powered by Everything / es.exe.
 
 ## Highlights
 
-- PyPI package name: `eskit-python`
+- PyPI package name: `eskit`
 - CLI command: `eskit`
 - Direct grammar: `eskit [drive/path ...] [file-type ...] [filename ...] [actions]`
 - WSL path normalization: `d/Projects == /mnt/d/Projects == D:\Projects`
@@ -24,7 +24,7 @@
 ## Quick start
 
 ```bash
-pipx install eskit-python
+pipx install eskit
 export ESKIT_ES_PATH=/mnt/i/Software/Everything/es.exe
 eskit doctor
 eskit d .pdf ODL
