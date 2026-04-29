@@ -29,7 +29,7 @@ eskit d .pdf ODL --json
 
 `eskit --help` 会展示直接搜索语法、常用例子和参数速查：
 
-![eskit help 界面](Help-20260429.png)
+![eskit help 界面](Help.png)
 
 ## 为什么做这个项目
 
