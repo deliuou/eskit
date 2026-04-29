@@ -620,6 +620,7 @@ DIRECT_HELP = r"""
   --open / --reveal / --copy-path / --copy-name / --copy-to DIR  [--index N]
 
 [bold]帮助[/]
+  eskit --version     查看版本号
   eskit --help-full   查看完整说明
   eskit doctor        检查 es.exe / Everything
   eskit path d/ABC    查看路径规范化
@@ -724,6 +725,9 @@ def entrypoint() -> None:
     argv = sys.argv[1:]
     if not argv or argv[0] in {"--help", "-h", "help"}:
         console.print(DIRECT_HELP)
+        raise SystemExit(0)
+    if argv[0] in {"--version", "-V"}:
+        console.print(__version__)
         raise SystemExit(0)
     if argv[0] in {"--help-full", "--long-help"}:
         console.print(DIRECT_HELP_FULL)
