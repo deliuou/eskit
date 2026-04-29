@@ -5,6 +5,7 @@ from pathlib import PureWindowsPath
 from typing import Optional
 
 import typer
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -520,7 +521,7 @@ def _run_direct_search(argv: list[str]) -> int:
                 raise RuntimeError("--copy-to requires a destination")
             copy_to = argv[i]
         elif arg in {"--help", "-h"}:
-            console.print(DIRECT_HELP)
+            _print_direct_help()
             return 0
         elif arg in {"--help-full", "--long-help"}:
             console.print(DIRECT_HELP_FULL)
@@ -598,33 +599,95 @@ KNOWN_COMMANDS = {
     "--version",
 }
 
-DIRECT_HELP = r"""
-[bold cyan]eskit[/] — Everything/es.exe 的 Listary 风格搜索器
+def _section_table(*rows: tuple[str, str]) -> Table:
+    table = Table.grid(padding=(0, 2))
+    table.add_column(style="bold cyan", no_wrap=True)
+    table.add_column(style="white")
+    for left, right in rows:
+        table.add_row(left, right)
+    return table
 
-[bold]语法[/]
-  eskit [盘符/路径 ...] [文件类型 ...] [文件名 ...] [处理参数]
 
-[bold]例子[/]
-  eskit .pdf ODL
-  eskit d f ODL --sort size --top 10
-  eskit d e .jpg .png screenshot --stats
-  eskit d folder ODL
-  eskit d folder .pdf ODL
-  eskit d/Projects .pdf 开题 --copy-path --index 2
+def _command_table(*rows: tuple[str, str]) -> Table:
+    table = Table(
+        show_header=True,
+        header_style="bold",
+        box=box.SIMPLE,
+        pad_edge=False,
+        expand=True,
+    )
+    table.add_column("场景", style="cyan", no_wrap=True)
+    table.add_column("命令", style="green")
+    for title, command in rows:
+        table.add_row(title, command)
+    return table
 
-[bold]盘符/路径[/]  d -> D:\    d f -> D:\ + F:\    d/Projects -> D:\Projects
-[bold]文件类型[/]  .pdf .jpg .png 可多个；folder/dir/目录/文件夹 表示只搜文件夹
-[bold]处理参数[/]
-  --sort name|path|ext|size|modified   --asc / --desc   --top N
-  --count   --stats   --table   --json   --export out.md
-  --open / --reveal / --copy-path / --copy-name / --copy-to DIR  [--index N]
 
-[bold]帮助[/]
-  eskit --version     查看版本号
-  eskit --help-full   查看完整说明
-  eskit doctor        检查 es.exe / Everything
-  eskit path d/ABC    查看路径规范化
-"""
+def _print_direct_help() -> None:
+    header = Table.grid(padding=(0, 1))
+    header.add_column(justify="left")
+    header.add_row("[bold cyan]eskit[/] [dim]v%s[/]" % __version__)
+    header.add_row("Everything / es.exe 的 Listary 风格文件搜索命令")
+    header.add_row("[dim]默认语法就是搜索，不需要输入 search 子命令。[/]")
+
+    console.print(
+        Panel(
+            header,
+            title="[bold]ESKit[/]",
+            border_style="cyan",
+            box=box.ROUNDED,
+            padding=(1, 2),
+        )
+    )
+
+    console.print(
+        Panel(
+            _section_table(
+                ("语法", "[bold green]eskit[/] [盘符/路径 ...] [文件类型 ...] [文件名 ...] [处理参数]"),
+                ("盘符/路径", "[green]d[/] -> D:\\    [green]d f[/] -> D:\\ + F:\\    [green]d/Projects[/] -> D:\\Projects"),
+                ("文件类型", "[green].pdf .jpg .png[/] 可组合；[green]folder dir 目录 文件夹[/] 只搜文件夹"),
+                ("文件名", "普通关键词、中文关键词、缩写都可以；默认启用模糊和拼音首字母匹配"),
+            ),
+            title="[bold]快速语法[/]",
+            border_style="blue",
+            box=box.ROUNDED,
+        )
+    )
+
+    console.print(
+        Panel(
+            _command_table(
+                ("搜 PDF", "eskit d .pdf ODL"),
+                ("多盘多类型", "eskit d f .pdf .pptx 开题 --sort modified --top 20"),
+                ("只看文件夹", "eskit d folder report"),
+                ("表格输出", "eskit d/Projects .jpg screenshot --table"),
+                ("复制结果路径", "eskit d .pdf 开题 --copy-path --index 2"),
+                ("脚本读取", "eskit d .pdf ODL --json"),
+            ),
+            title="[bold]常用例子[/]",
+            border_style="green",
+            box=box.ROUNDED,
+        )
+    )
+
+    console.print(
+        Panel(
+            _section_table(
+                ("排序截取", "--sort name|path|ext|size|modified    --asc / --desc    --top N"),
+                ("输出模式", "--table    --json    --ndjson    --export out.md"),
+                ("统计", "--count    --stats"),
+                ("结果动作", "--open    --reveal    --copy-path    --copy-name"),
+                ("复制/选择", "--copy-to DIR    --index N"),
+                ("搜索控制", "--limit N    --files / --folders    --fuzzy / --no-fuzzy"),
+                ("诊断", "--debug    --es-path PATH    --instance NAME"),
+                ("维护命令", "eskit doctor    eskit path d/ABC"),
+                ("帮助", "eskit --version    eskit --help-full"),
+            ),
+            title="[bold]参数速查[/]",
+            border_style="magenta",
+            box=box.ROUNDED,
+        )
+    )
 
 DIRECT_HELP_FULL = r"""
 [bold cyan]eskit：Everything / es.exe 的 Listary 风格命令行搜索器[/]
@@ -724,7 +787,7 @@ DIRECT_HELP_FULL = r"""
 def entrypoint() -> None:
     argv = sys.argv[1:]
     if not argv or argv[0] in {"--help", "-h", "help"}:
-        console.print(DIRECT_HELP)
+        _print_direct_help()
         raise SystemExit(0)
     if argv[0] in {"--version", "-V"}:
         console.print(__version__)
