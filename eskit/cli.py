@@ -25,7 +25,14 @@ from .grammar import SearchSpec, parse_search_tokens
 from .listary import listary_results
 from .models import EsKitResponse, SearchResult
 from .safety import is_dangerous_root, remove_empty_folders
-from .util import display_path_equivalence, is_wsl, json_dumps, platform_info, windows_process_running
+from .util import (
+    configure_windows_console_utf8,
+    display_path_equivalence,
+    is_wsl,
+    json_dumps,
+    platform_info,
+    windows_process_running,
+)
 
 app = typer.Typer(
     name="eskit",
@@ -35,6 +42,7 @@ app = typer.Typer(
     ),
     no_args_is_help=False,
 )
+configure_windows_console_utf8()
 console = Console()
 
 

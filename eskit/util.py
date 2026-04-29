@@ -35,6 +35,20 @@ def is_wsl() -> bool:
         return False
 
 
+def configure_windows_console_utf8() -> None:
+    """Best-effort UTF-8 console setup for native Windows terminals."""
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleOutputCP(65001)
+        kernel32.SetConsoleCP(65001)
+    except Exception:
+        return
+
+
 def strip_outer_quotes(path: str) -> str:
     return path.strip().strip('"').strip("'")
 

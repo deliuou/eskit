@@ -146,12 +146,27 @@ es.exe -n 5 "*.pdf"
 
 ## 安装：Linux / WSL
 
-这里的 Linux 主要指 WSL。当前推荐直接从 GitHub 源码安装：
+这里的 Linux 主要指 WSL。推荐安装到项目内虚拟环境，避免写入系统 Python 或遇到权限问题。
+
+如果已安装 `uv`：
 
 ```bash
 git clone https://github.com/deliuou/eskit.git
 cd eskit
-python3 -m pip install -e .
+uv venv
+source .venv/bin/activate
+uv pip install -e .
+```
+
+没有 `uv` 时使用 Python 自带虚拟环境：
+
+```bash
+git clone https://github.com/deliuou/eskit.git
+cd eskit
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
 安装后检查：
@@ -203,10 +218,12 @@ echo 'export ESKIT_ES_INSTANCE=1.5a' >> ~/.bashrc
 
 ## 卸载：Linux / WSL
 
-在源码目录或任意目录执行：
+先进入安装时使用的虚拟环境，再卸载：
 
 ```bash
-python3 -m pip uninstall eskit
+cd eskit
+source .venv/bin/activate
+python -m pip uninstall eskit
 ```
 
 如果你之前写入了环境变量，可以从 `~/.bashrc` 或 `~/.zshrc` 中删除这些行：
@@ -218,12 +235,27 @@ export ESKIT_ES_INSTANCE=1.5a
 
 ## 安装：Windows
 
-Windows 原生命令行推荐在 PowerShell 中从 GitHub 源码安装：
+Windows 原生命令行推荐在 PowerShell 中安装到项目内虚拟环境。
+
+如果已安装 `uv`：
 
 ```powershell
 git clone https://github.com/deliuou/eskit.git
 cd eskit
-py -m pip install -e .
+uv venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -e .
+```
+
+没有 `uv` 时使用 Python 自带虚拟环境：
+
+```powershell
+git clone https://github.com/deliuou/eskit.git
+cd eskit
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
 安装后检查：
@@ -258,10 +290,12 @@ Everything 1.5 Alpha 用户：
 
 ## 卸载：Windows
 
-在源码目录或任意目录执行：
+先进入安装时使用的虚拟环境，再卸载：
 
 ```powershell
-py -m pip uninstall eskit
+cd eskit
+.\.venv\Scripts\Activate.ps1
+python -m pip uninstall eskit
 ```
 
 如果你设置过环境变量，可以删除：
@@ -616,6 +650,22 @@ export ESKIT_ES_INSTANCE=1.5a
 eskit d f .pdf .pptx ODL --debug --table
 ```
 
+### 5. 中文路径或终端中文显示乱码
+
+`eskit` 会在 Windows 原生命令行中尽量切到 UTF-8 控制台，并默认让 `es.exe` 使用 UTF-8 代码页输出。
+
+如果使用很旧的 `es.exe`，搜索结果里的中文路径仍然乱码，可以显式指定回退解码：
+
+```bash
+export ESKIT_ES_ENCODING=gb18030
+```
+
+Windows PowerShell：
+
+```powershell
+$env:ESKIT_ES_ENCODING = "gb18030"
+```
+
 ## 命令参考
 
 更多命令细节见：
@@ -633,18 +683,29 @@ eskit --help-full
 
 ## 开发
 
-从源码安装开发环境：
+从源码安装开发环境。推荐使用 `uv`：
 
 ```bash
 git clone https://github.com/deliuou/eskit.git
 cd eskit
-python3 -m pip install -e .
+uv venv
+source .venv/bin/activate
+uv pip install -e .
+```
+
+或使用 Python 自带虚拟环境：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
 运行测试：
 
 ```bash
-python3 -m pytest
+python -m pytest
 ```
 
 项目结构：

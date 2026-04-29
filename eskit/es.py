@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import locale
 import os
 import shlex
 import subprocess
@@ -39,28 +40,85 @@ class EsClient:
             )
         return self.es_path
 
-    def run_raw(self, args: list[str]) -> CommandResult:
-        exe = self.require()
-        cmd = [exe]
+    def _command(self, args: list[str], *, utf8_code_page: bool = True) -> list[str]:
+        cmd = [self.require()]
         if self.instance:
             cmd.extend(["-instance", self.instance])
+        if utf8_code_page:
+            cmd.extend(["-cp", "65001"])
         cmd.extend(args)
+        return cmd
+
+    @staticmethod
+    def _decode_output(data: bytes | str | None, *, prefer_utf8: bool = True) -> str:
+        if data is None:
+            return ""
+        if isinstance(data, str):
+            return data
+
+        env_encoding = os.environ.get("ESKIT_ES_ENCODING")
+        encodings: list[str] = []
+        if env_encoding:
+            encodings.append(env_encoding)
+        if prefer_utf8:
+            encodings.extend(["utf-8-sig", "utf-8"])
+        encodings.extend(
+            [
+                locale.getpreferredencoding(False),
+                "gb18030",
+                "cp1252",
+            ]
+        )
+
+        seen: set[str] = set()
+        for encoding in encodings:
+            if not encoding:
+                continue
+            key = encoding.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            try:
+                return data.decode(encoding)
+            except (LookupError, UnicodeDecodeError):
+                continue
+        return data.decode("utf-8", errors="replace")
+
+    def _run_command(self, cmd: list[str], *, prefer_utf8: bool) -> CommandResult:
         start = time.perf_counter()
         try:
             proc = subprocess.run(
                 cmd,
                 capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
+                text=False,
                 timeout=self.timeout,
             )
         except subprocess.TimeoutExpired as exc:
             elapsed = int((time.perf_counter() - start) * 1000)
-            result = CommandResult(False, cmd, 124, exc.stdout or "", exc.stderr or "", elapsed)
+            result = CommandResult(
+                False,
+                cmd,
+                124,
+                self._decode_output(exc.stdout, prefer_utf8=prefer_utf8),
+                self._decode_output(exc.stderr, prefer_utf8=prefer_utf8),
+                elapsed,
+            )
             raise EsError("es.exe timed out", result) from exc
         elapsed = int((time.perf_counter() - start) * 1000)
-        return CommandResult(proc.returncode == 0, cmd, proc.returncode, proc.stdout, proc.stderr, elapsed)
+        stdout = self._decode_output(proc.stdout, prefer_utf8=prefer_utf8)
+        stderr = self._decode_output(proc.stderr, prefer_utf8=prefer_utf8)
+        return CommandResult(proc.returncode == 0, cmd, proc.returncode, stdout, stderr, elapsed)
+
+    def run_raw(self, args: list[str]) -> CommandResult:
+        cmd = self._command(args, utf8_code_page=True)
+        result = self._run_command(cmd, prefer_utf8=True)
+        if result.returncode != 6:
+            return result
+
+        # Older ES builds may not support -cp. Retry once without it and decode
+        # with local fallbacks so Chinese Windows output still has a chance to survive.
+        fallback_cmd = self._command(args, utf8_code_page=False)
+        return self._run_command(fallback_cmd, prefer_utf8=False)
 
     def search_paths(
         self,

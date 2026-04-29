@@ -26,8 +26,19 @@
 ```bash
 git clone https://github.com/deliuou/eskit.git
 cd eskit
-python3 -m pip install -e .
+uv venv
+source .venv/bin/activate
+uv pip install -e .
 export ESKIT_ES_PATH=/mnt/i/Software/Everything/es.exe
 eskit doctor
 eskit d .pdf ODL
+```
+
+If `uv` is not available, replace the install step with:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
