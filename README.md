@@ -25,6 +25,12 @@ eskit d .pdf 开题 --copy-path --index 2
 eskit d .pdf ODL --json
 ```
 
+## 界面预览
+
+`eskit --help` 会展示直接搜索语法、常用例子和参数速查：
+
+![eskit help 界面](Help.png)
+
 ## 为什么做这个项目
 
 Everything 在 Windows 上搜索文件非常快，但开发者在 WSL、终端、脚本和自动化场景里经常会遇到这些问题：
@@ -268,6 +274,12 @@ py -m pip uninstall eskit
 如果你不再需要底层搜索能力，可以另外卸载 Everything 和删除 `es.exe`。这不属于 `eskit` 的卸载范围。
 
 ## 快速开始
+
+### 搜索案例
+
+下面是一次典型的终端搜索结果：
+
+![eskit 搜索案例](example.png)
 
 ### 搜索 PDF
 

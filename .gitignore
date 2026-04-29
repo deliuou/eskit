@@ -8,5 +8,6 @@ dist/
 .venv/
 .env
 .DS_Store
+*:Zone.Identifier
 eskit-report.md
 eskit-results.*
